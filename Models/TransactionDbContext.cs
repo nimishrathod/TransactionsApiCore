@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace TransactionsApi.Models
 {
@@ -11,13 +12,16 @@ namespace TransactionsApi.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<MutualFund>()
+                .HasKey(fund => fund.SchemeCode);
+
             modelBuilder.Entity<Transaction>()
-                .HasOne<MutualFund>(t => t.Fund)
+                .HasOne<MutualFund>(t => t.MutualFund)
                 .WithMany()
-                .HasForeignKey(t => t.FundId);
+                .HasForeignKey(t => t.SchemeCode);
         }
 
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<MutualFund> Funds { get; set; }
+        public DbSet<MutualFund> MutualFunds { get; set; }
     }
 }

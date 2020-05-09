@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using TransactionsApi.Models;
+using Microsoft.OpenApi.Models;
 
 namespace TransactionsApi
 {
@@ -27,8 +28,26 @@ namespace TransactionsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // services.AddDbContext<TransactionContext>
+            //     (opt => opt.UseInMemoryDatabase("Transactions"));
+
+            services.AddSwaggerGen
+            (
+                opt =>
+                {
+                    opt.SwaggerDoc("v1", new OpenApiInfo
+                    {
+                        Title = "My Portfolio - Transactions HTTP Api",
+                        Version = "v1",
+                        Description = "My Portfolio - Transactions HTTP Api"
+                    });
+                }
+            );
+
+
             services.AddDbContext<TransactionContext>
-                (opt => opt.UseInMemoryDatabase("Transactions"));
+                (opt => opt.UseMySQL(Configuration.GetConnectionString("Transactions")));
+
             services.AddControllers();
         }
 
@@ -50,6 +69,14 @@ namespace TransactionsApi
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger()
+                .UseSwaggerUI(
+                    c =>
+                    {
+                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                    }
+                );
         }
     }
 }

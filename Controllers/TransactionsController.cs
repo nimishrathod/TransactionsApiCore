@@ -24,7 +24,7 @@ namespace TransactionsApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions()
         {
-            return await _context.Transactions.Include(t => t.Fund).ToListAsync();
+            return await _context.Transactions.Include(t => t.MutualFund).ToListAsync();
             // return await _context.Transactions.ToListAsync();
         }
 
@@ -35,7 +35,7 @@ namespace TransactionsApi.Controllers
             // just additional comment
             // var transaction = await _context.Transactions.FindAsync(id);
             var transaction = await _context.Transactions
-                                    .Include(t => t.Fund)
+                                    .Include(t => t.MutualFund)
                                     .FirstOrDefaultAsync(t => t.Id == id);
 
             if (transaction == null)

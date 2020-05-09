@@ -24,14 +24,14 @@ namespace TransactionsApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MutualFund>>> GetFunds()
         {
-            return await _context.Funds.ToListAsync();
+            return await _context.MutualFunds.ToListAsync();
         }
 
         // GET: api/MutualFunds/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MutualFund>> GetMutualFund(int id)
+        [HttpGet("{schemeCode}")]
+        public async Task<ActionResult<MutualFund>> GetMutualFund(string schemeCode)
         {
-            var mutualFund = await _context.Funds.FindAsync(id);
+            var mutualFund = await _context.MutualFunds.FindAsync(schemeCode);
 
             if (mutualFund == null)
             {
@@ -44,10 +44,10 @@ namespace TransactionsApi.Controllers
         // PUT: api/MutualFunds/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMutualFund(int id, MutualFund mutualFund)
+        [HttpPut("{schemeCode}")]
+        public async Task<IActionResult> PutMutualFund(string schemeCode, MutualFund mutualFund)
         {
-            if (id != mutualFund.Id)
+            if (schemeCode != mutualFund.SchemeCode)
             {
                 return BadRequest();
             }
@@ -60,7 +60,7 @@ namespace TransactionsApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MutualFundExists(id))
+                if (!MutualFundExists(schemeCode))
                 {
                     return NotFound();
                 }
@@ -79,31 +79,31 @@ namespace TransactionsApi.Controllers
         [HttpPost]
         public async Task<ActionResult<MutualFund>> PostMutualFund(MutualFund mutualFund)
         {
-            _context.Funds.Add(mutualFund);
+            _context.MutualFunds.Add(mutualFund);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetMutualFund), new { id = mutualFund.Id }, mutualFund);
+            return CreatedAtAction(nameof(GetMutualFund), new { schemeCode = mutualFund.SchemeCode }, mutualFund);
         }
 
         // DELETE: api/MutualFunds/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<MutualFund>> DeleteMutualFund(int id)
+        [HttpDelete("{schemeCode}")]
+        public async Task<ActionResult<MutualFund>> DeleteMutualFund(string schemeCode)
         {
-            var mutualFund = await _context.Funds.FindAsync(id);
+            var mutualFund = await _context.MutualFunds.FindAsync(schemeCode);
             if (mutualFund == null)
             {
                 return NotFound();
             }
 
-            _context.Funds.Remove(mutualFund);
+            _context.MutualFunds.Remove(mutualFund);
             await _context.SaveChangesAsync();
 
             return mutualFund;
         }
 
-        private bool MutualFundExists(int id)
+        private bool MutualFundExists(string schemeCode)
         {
-            return _context.Funds.Any(e => e.Id == id);
+            return _context.MutualFunds.Any(e => e.SchemeCode == schemeCode);
         }
     }
 }
